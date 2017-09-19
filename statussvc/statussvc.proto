@@ -1,0 +1,23 @@
+syntax = "proto3";
+package statussvc;
+
+// GetLivenessRequest is the request for getting liveness.
+message GetLivenessRequest {}
+
+// GetLivenessResponse is the response for getting liveness.
+message GetLivenessResponse {}
+
+// GetReadinessRequest is the request for getting readiness.
+message GetReadinessRequest {}
+
+// GetReadinessResponse is the request for getting readiness.
+message GetReadinessResponse {}
+
+// StatusService responds to health / readiness checks.
+service StatusService {
+  // GetReadiness checks if the service is ready. Returns an error if not ready.
+  rpc GetReadiness(GetReadinessRequest) returns (GetReadinessResponse) {}
+  // GetLiveness checks if the service is alive at all. Returns an error if not alive.
+  rpc GetLiveness(GetLivenessRequest) returns (GetLivenessResponse) {}
+}
+
