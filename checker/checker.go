@@ -102,4 +102,5 @@ var CheckerCommand = cli.Command{
 	Name:        "checker",
 	Usage:       "sub-commands check to see if a status-enabled service is live or ready",
 	Subcommands: CheckerSubCommands,
+	Flags:       CheckerFlags,
 }
