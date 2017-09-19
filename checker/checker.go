@@ -1,4 +1,4 @@
-package main
+package checker
 
 import (
 	"context"
@@ -54,48 +54,52 @@ func performChecks(isLiveness bool) error {
 			callOptions...,
 		)
 	}
+
 	return err
 }
 
-func main() {
-	app := cli.NewApp()
-	app.Name = "checker"
-	app.Usage = "Checks to see if a GRPC service is online or not, by calling a status service."
-	app.HideVersion = true
-	app.Commands = []cli.Command{
-		cli.Command{
-			Name:  "ready",
-			Usage: "checks to see if the GRPC service is ready",
-			Action: func(c *cli.Context) error {
-				return performChecks(false)
-			},
+// CheckerSubCommands are the subcommands for the checker cli.
+var CheckerSubCommands = []cli.Command{
+	cli.Command{
+		Name:  "ready",
+		Usage: "checks to see if the GRPC service is ready",
+		Action: func(c *cli.Context) error {
+			return performChecks(false)
 		},
-		cli.Command{
-			Name:  "live",
-			Usage: "checks to see if the GRPC service is alive",
-			Action: func(c *cli.Context) error {
-				return performChecks(true)
-			},
+	},
+	cli.Command{
+		Name:  "live",
+		Usage: "checks to see if the GRPC service is alive",
+		Action: func(c *cli.Context) error {
+			return performChecks(true)
 		},
-	}
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:        "endpoint",
-			Usage:       "the grpc endpoint to contact",
-			Destination: &cliArgs.Endpoint,
-			Value:       "localhost:5000",
-		},
-		cli.BoolTFlag{
-			Name:        "fail-fast",
-			Usage:       "If set, don't wait for the timeout to fail, but fail quickly.",
-			Destination: &cliArgs.FailFast,
-		},
-		cli.IntFlag{
-			Name:        "timeout-seconds",
-			Usage:       "sets the seconds to wait for the call to go through",
-			Destination: &cliArgs.TimeoutSeconds,
-			Value:       3,
-		},
-	}
-	app.RunAndExitOnError()
+	},
+}
+
+// CheckerFlags are the flags of the checker command.
+var CheckerFlags = []cli.Flag{
+	cli.StringFlag{
+		Name:        "endpoint",
+		Usage:       "the grpc endpoint to contact",
+		Destination: &cliArgs.Endpoint,
+		Value:       "localhost:5000",
+	},
+	cli.BoolTFlag{
+		Name:        "fail-fast",
+		Usage:       "If set, don't wait for the timeout to fail, but fail quickly.",
+		Destination: &cliArgs.FailFast,
+	},
+	cli.IntFlag{
+		Name:        "timeout-seconds",
+		Usage:       "sets the seconds to wait for the call to go through",
+		Destination: &cliArgs.TimeoutSeconds,
+		Value:       3,
+	},
+}
+
+// CheckerCommand is the command with live and readiness subcommands, and the root flags.
+var CheckerCommand = cli.Command{
+	Name:        "checker",
+	Usage:       "sub-commands check to see if a status-enabled service is live or ready",
+	Subcommands: CheckerSubCommands,
 }

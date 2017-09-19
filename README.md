@@ -18,7 +18,7 @@ The intent is to use this in a Kubernetes exec check, to determine if a GRPC-onl
 You can get the checker like so:
 
 ```
-go get -u -v github.com/paralin/grpc-liveness/checker
+go get -u -v github.com/paralin/grpc-liveness/cmd/checker
 ```
 
 To implement the checking service in your project, see the example directory.
